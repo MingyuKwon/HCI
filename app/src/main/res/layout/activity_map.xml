@@ -56,4 +56,17 @@
         app:layout_constraintStart_toEndOf="@+id/textViewStatic1" />
 
 
+    <TextView
+        android:id="@+id/DestinationSetPageHeaderText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginBottom="70dp"
+        android:text="목적지 설정"
+        android:textSize="30dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/map"
+        app:layout_constraintStart_toStartOf="@+id/map" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
