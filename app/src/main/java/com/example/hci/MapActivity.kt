@@ -41,5 +41,6 @@ class MapActivity : FragmentActivity() , OnMapReadyCallback {
         val Seoul : LatLng = LatLng(37.5519,126.9918)
         p0.addMarker(MarkerOptions().position(Seoul).title("서울"))
         p0.moveCamera(CameraUpdateFactory.newLatLng(Seoul))
+        p0.setMinZoomPreference(13.0F)
     }
 }
