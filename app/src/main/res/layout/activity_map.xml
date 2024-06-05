@@ -33,4 +33,27 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/GoBackButton_Map"
         />
+
+    <TextView
+        android:id="@+id/textViewStatic1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="설정 위치 : "
+        android:textSize="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/map"
+        app:layout_constraintStart_toStartOf="@+id/map"
+        android:layout_marginBottom="20dp"
+        />
+
+    <TextView
+        android:id="@+id/settingLocationDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=" 서울시 광진구  "
+        android:textSize="16dp"
+        android:layout_marginLeft="10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/textViewStatic1"
+        app:layout_constraintStart_toEndOf="@+id/textViewStatic1" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
