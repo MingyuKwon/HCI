@@ -7,5 +7,8 @@ class Data {
     companion object {
         var currentLocationLatng : LatLng? = null
         var currentLocationAddress : String? = null
+
+        var DestinationLocationLatng : LatLng? = null
+        var DestinationLocationAddress : String? = null
     }
 }

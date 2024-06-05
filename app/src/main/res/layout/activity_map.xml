@@ -15,24 +15,34 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
 
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="40dp"
         android:layout_marginRight="40dp"
         />
+
+    <Button
+        android:id="@+id/DestinationSetPageOKButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="90dp"
+
+        android:text="목적지 설정"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/map"
+        app:layout_constraintStart_toStartOf="@+id/map"
+    />
 
     <fragment
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginRight="30dp"
         android:layout_marginLeft="30dp"
         android:layout_marginTop="70dp"
-        android:layout_marginBottom="40dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginRight="30dp"
+        app:layout_constraintBottom_toTopOf="@+id/DestinationSetPageOKButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/GoBackButton_Map"
-        />
+        app:layout_constraintTop_toBottomOf="@id/GoBackButton_Map" />
 
     <TextView
         android:id="@+id/textViewStatic1"
@@ -50,8 +60,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=" 서울시 광진구  "
-        android:textSize="16dp"
+        android:textSize="14dp"
         android:layout_marginLeft="10dp"
+        android:layout_marginBottom="1dp"
         app:layout_constraintBottom_toBottomOf="@+id/textViewStatic1"
         app:layout_constraintStart_toEndOf="@+id/textViewStatic1" />
 

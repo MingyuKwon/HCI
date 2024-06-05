@@ -3,6 +3,7 @@ package com.example.hci
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -11,6 +12,8 @@ import androidx.core.view.WindowInsetsCompat
 class MainActivity : AppCompatActivity() {
 
     lateinit var showmapButton : Button
+
+    lateinit var DestinationShowButton : TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,8 +31,17 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        DestinationShowButton = findViewById(R.id.DestinationShowButton)
 
+    }
 
+    override fun onResume() {
+        super.onResume()
+        ResumecallFunction()
+    }
+
+    private fun ResumecallFunction() {
+        DestinationShowButton.text = Data.DestinationLocationAddress
     }
 
 
