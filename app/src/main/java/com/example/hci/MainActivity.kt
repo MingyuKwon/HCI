@@ -12,8 +12,10 @@ import androidx.core.view.WindowInsetsCompat
 class MainActivity : AppCompatActivity() {
 
     lateinit var showmapButton : Button
+    lateinit var SettingButton : Button
 
-    lateinit var DestinationShowButton : TextView
+
+    lateinit var DestinationShowText : TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,7 +33,13 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        DestinationShowButton = findViewById(R.id.DestinationShowButton)
+        SettingButton = findViewById(R.id.ShowSettingButton)
+        SettingButton.setOnClickListener {
+            val intent = Intent(this, SettingActivity::class.java)
+            startActivity(intent)
+        }
+
+        DestinationShowText = findViewById(R.id.DestinationShowButton)
 
     }
 
@@ -41,7 +49,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun ResumecallFunction() {
-        DestinationShowButton.text = Data.DestinationLocationAddress
+        DestinationShowText.text = Data.DestinationLocationAddress
     }
 
 

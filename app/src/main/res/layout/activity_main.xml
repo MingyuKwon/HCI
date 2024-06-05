@@ -17,6 +17,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <Button
+        android:id="@+id/ShowSettingButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="알림 방법 설정하기"
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="@+id/ShowMapButton"
+        app:layout_constraintStart_toStartOf="@+id/ShowMapButton"
+        app:layout_constraintTop_toBottomOf="@+id/ShowMapButton" />
+
     <TextView
         android:id="@+id/DestinationShowButton"
         android:layout_width="wrap_content"
