@@ -113,7 +113,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun SetFavoriteSpinner() {
-        val items = mutableListOf("즐겨찾기")
+        val items = mutableListOf("즐겨찾기", "120 Neungdong-ro, Gwangjin District, Seoul")
         Data.FavoritesAddress?.let {
             items.addAll(it.filterNotNull())
         }
