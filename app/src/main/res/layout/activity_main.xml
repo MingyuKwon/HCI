@@ -7,36 +7,76 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+
+    <Spinner
+        android:id="@+id/FavoriteSpinner"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="150dp"
+        android:background="@drawable/favorites_outline"
+        app:layout_constraintBottom_toTopOf="@+id/DestinationShowButton"
+        app:layout_constraintEnd_toEndOf="@+id/ShowMapButton"
+
+        app:layout_constraintStart_toStartOf="@+id/ShowMapButton" />
+
     <Button
         android:id="@+id/ShowMapButton"
-        android:layout_width="wrap_content"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="314dp"
+        android:layout_marginTop="350dp"
         android:text="도착지 정하기"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
+        android:id="@+id/FavoriteAddButton"
+        android:layout_width="130dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:text="즐겨 찾기 추가"
+        android:textSize="13dp"
+        android:background="@drawable/favoritebutton"
+
+        app:layout_constraintBottom_toTopOf="@+id/DestinationShowButton"
+        app:layout_constraintStart_toStartOf="@+id/DestinationShowButton" />
+
+    <Button
+        android:id="@+id/FavoriteDeleteButton"
+        android:layout_width="130dp"
+        android:layout_height="wrap_content"
+        android:text="즐겨 찾기 삭제"
+        android:textSize="13dp"
+        android:layout_marginLeft="30dp"
+        android:background="@drawable/favoritedeletebutton"
+        app:layout_constraintBottom_toBottomOf="@+id/FavoriteAddButton"
+        app:layout_constraintStart_toEndOf="@+id/FavoriteAddButton" />
+
+    <Button
         android:id="@+id/ShowSettingButton"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="알림 방법 설정하기"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="100dp"
         app:layout_constraintEnd_toEndOf="@+id/ShowMapButton"
         app:layout_constraintStart_toStartOf="@+id/ShowMapButton"
         app:layout_constraintTop_toBottomOf="@+id/ShowMapButton" />
 
     <TextView
         android:id="@+id/DestinationShowButton"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/text_outline"
         android:text="Destination"
         android:textAlignment="center"
+
         android:textSize="20dp"
+
         app:layout_constraintBottom_toTopOf="@+id/ShowMapButton"
         app:layout_constraintEnd_toEndOf="@+id/ShowMapButton"
         app:layout_constraintStart_toStartOf="@+id/ShowMapButton" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
