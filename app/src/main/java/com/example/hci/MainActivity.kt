@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
@@ -21,6 +22,8 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var showmapButton: Button
     lateinit var SettingButton: Button
+    lateinit var AlarmStartButton: ImageButton
+
     private lateinit var FavoriteSpinner: Spinner
     private lateinit var favoriteAddButton: Button
     private lateinit var favoriteDeleteButton: Button
@@ -41,6 +44,9 @@ class MainActivity : AppCompatActivity() {
         favoriteDeleteButton = findViewById(R.id.FavoriteDeleteButton)
         showmapButton = findViewById(R.id.ShowMapButton)
         SettingButton = findViewById(R.id.ShowSettingButton)
+
+        AlarmStartButton = findViewById(R.id.AlarmStartButton)
+
         DestinationShowText = findViewById(R.id.DestinationShowButton)
 
         showmapButton.setOnClickListener {
@@ -51,6 +57,17 @@ class MainActivity : AppCompatActivity() {
         SettingButton.setOnClickListener {
             val intent = Intent(this, SettingActivity::class.java)
             startActivity(intent)
+        }
+
+        AlarmStartButton.setOnClickListener {
+
+            val address = DestinationShowText.text.toString()
+            if (address.isNotEmpty()) {
+                val intent = Intent(this, AlarmActivateActivity::class.java)
+                startActivity(intent)
+            } else {
+                Toast.makeText(this, "주소를 입력해야 알람 시작이 가능합니다", Toast.LENGTH_SHORT).show()
+            }
         }
 
         SetFavoriteSpinner()

@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
     tools:context=".MapActivity">
 
     <EditText
@@ -28,6 +29,8 @@
 
         android:layout_marginTop="40dp"
         android:layout_marginRight="40dp"
+        android:background="@drawable/defaultbutton"
+
         />
 
 
@@ -42,7 +45,9 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/map"
         app:layout_constraintStart_toStartOf="@+id/map"
-    />
+        android:background="@drawable/defaultbutton"
+
+        />
 
     <fragment
         android:id="@+id/map"
@@ -92,12 +97,12 @@
 
     <ImageButton
         android:id="@+id/SearchButton"
-        android:layout_width="55dp"
-        android:layout_height="55dp"
-        android:layout_marginRight="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:src="@drawable/searchi_con"
         app:layout_constraintBottom_toBottomOf="@+id/SearchText"
-        app:layout_constraintEnd_toEndOf="@+id/map"
-        tools:src="@drawable/searchi_con" />
+        app:layout_constraintStart_toEndOf="@+id/SearchText" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
