@@ -10,8 +10,11 @@ import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
 import android.widget.Button
+import android.widget.EditText
 import android.widget.FrameLayout
+import android.widget.ImageButton
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -38,6 +41,9 @@ class MapActivity : FragmentActivity(), OnMapReadyCallback, GoogleMap.OnMapClick
     private lateinit var backButton: Button
     private lateinit var OkButton: Button
 
+    private lateinit var searchButton: ImageButton
+    private lateinit var searchText: EditText
+
     private val LOCATION_PERMISSION_REQUEST_CODE = 1
     private var currentMarker: Marker? = null
     private var locationText: TextView? = null
@@ -62,6 +68,9 @@ class MapActivity : FragmentActivity(), OnMapReadyCallback, GoogleMap.OnMapClick
 
         backButton = findViewById(R.id.GoBackButton_Map)
         OkButton = findViewById(R.id.DestinationSetPageOKButton)
+        searchButton = findViewById(R.id.SearchButton)
+        searchText = findViewById(R.id.SearchText)
+
 
         backButton.setOnClickListener {
             finish()
@@ -76,6 +85,15 @@ class MapActivity : FragmentActivity(), OnMapReadyCallback, GoogleMap.OnMapClick
             }
         }
 
+        searchButton.setOnClickListener {
+            val address = searchText.text.toString()
+            if (address.isNotEmpty()) {
+                searchAddressAndMoveCamera(address)
+            } else {
+                Toast.makeText(this, "Please enter an address", Toast.LENGTH_SHORT).show()
+            }
+        }
+
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
@@ -83,6 +101,30 @@ class MapActivity : FragmentActivity(), OnMapReadyCallback, GoogleMap.OnMapClick
 
         createLoadingDialog() // 로딩 다이얼로그 생성
         showLoadingDialog() // 초기 로딩 다이얼로그 표시
+    }
+
+    private fun searchAddressAndMoveCamera(address: String) {
+        val geocoder = Geocoder(this, Locale.getDefault())
+        try {
+            val addresses = geocoder.getFromLocationName(address, 1)
+            if (addresses != null && addresses.isNotEmpty()) {
+                val location = addresses[0]
+                val latLng = LatLng(location.latitude, location.longitude)
+                _currentLatLng = latLng
+                _currentAddress = location.getAddressLine(0)
+
+                updateMarker(latLng)
+                gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
+                locationText?.text = _currentAddress
+            } else {
+                searchText.text.clear()
+                Toast.makeText(this, "Invalid address", Toast.LENGTH_SHORT).show()
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            searchText.text.clear()
+            Toast.makeText(this, "Geocoding failed", Toast.LENGTH_SHORT).show()
+        }
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
