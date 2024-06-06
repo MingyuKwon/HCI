@@ -12,12 +12,12 @@
         android:id="@+id/FavoriteSpinner"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="200dp"
-        android:background="@drawable/text_outline"
+        android:layout_marginBottom="150dp"
+        android:background="@drawable/favorites_outline"
         app:layout_constraintBottom_toTopOf="@+id/DestinationShowButton"
-        app:layout_constraintStart_toStartOf="@+id/ShowMapButton"
+        app:layout_constraintEnd_toEndOf="@+id/ShowMapButton"
 
-        />
+        app:layout_constraintStart_toStartOf="@+id/ShowMapButton" />
 
     <Button
         android:id="@+id/ShowMapButton"
@@ -28,6 +28,29 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/FavoriteAddButton"
+        android:layout_width="130dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:text="즐겨 찾기 추가"
+        android:textSize="13dp"
+        android:background="@drawable/favoritebutton"
+
+        app:layout_constraintBottom_toTopOf="@+id/DestinationShowButton"
+        app:layout_constraintStart_toStartOf="@+id/DestinationShowButton" />
+
+    <Button
+        android:id="@+id/FavoriteDeleteButton"
+        android:layout_width="130dp"
+        android:layout_height="wrap_content"
+        android:text="즐겨 찾기 삭제"
+        android:textSize="13dp"
+        android:layout_marginLeft="30dp"
+        android:background="@drawable/favoritedeletebutton"
+        app:layout_constraintBottom_toBottomOf="@+id/FavoriteAddButton"
+        app:layout_constraintStart_toEndOf="@+id/FavoriteAddButton" />
 
     <Button
         android:id="@+id/ShowSettingButton"
@@ -43,7 +66,7 @@
         android:id="@+id/DestinationShowButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="30dp"
         android:background="@drawable/text_outline"
         android:text="Destination"
         android:textAlignment="center"
