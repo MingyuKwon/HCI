@@ -13,6 +13,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.ImageButton
+import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -37,6 +38,7 @@ class MapActivity : FragmentActivity(), OnMapReadyCallback, GoogleMap.OnMapClick
     private lateinit var map: FrameLayout
     private lateinit var locationManager: LocationManager
     private lateinit var loadingDialog: AlertDialog
+
 
     private lateinit var backButton: Button
     private lateinit var OkButton: Button
@@ -65,6 +67,7 @@ class MapActivity : FragmentActivity(), OnMapReadyCallback, GoogleMap.OnMapClick
 
         map = findViewById(R.id.map)
         locationText = findViewById(R.id.settingLocationDescription)
+
 
         backButton = findViewById(R.id.GoBackButton_Map)
         OkButton = findViewById(R.id.DestinationSetPageOKButton)
