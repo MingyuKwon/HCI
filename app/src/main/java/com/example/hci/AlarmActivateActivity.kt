@@ -3,6 +3,7 @@ package com.example.hci
 import android.Manifest
 import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.location.Location
@@ -39,8 +40,10 @@ class AlarmActivateActivity : FragmentActivity(), OnMapReadyCallback {
     private lateinit var loadingDialog: AlertDialog
     private lateinit var DistanceShowText: TextView
     private lateinit var CurrentDestinationText: TextView
+    private lateinit var NextAlarmDistanceShowText: TextView
 
     lateinit var AlarmCancelButton: Button
+    lateinit var GoBackButton_Map: Button
 
 
 
@@ -50,9 +53,6 @@ class AlarmActivateActivity : FragmentActivity(), OnMapReadyCallback {
     private var polyline: Polyline? = null
 
     private var isInitalLocationGetted: Boolean = false
-
-    private var _currentLatLng: LatLng? = null
-    private var _currentAddress: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,10 +67,16 @@ class AlarmActivateActivity : FragmentActivity(), OnMapReadyCallback {
         map = findViewById(R.id.alarmMap)
         DistanceShowText = findViewById(R.id.DistanceShowText)
         CurrentDestinationText = findViewById(R.id.CurrentDestinationText)
+        NextAlarmDistanceShowText = findViewById(R.id.NextAlarmDistanceShowText)
 
         AlarmCancelButton = findViewById(R.id.AlarmCancelButton)
         AlarmCancelButton.setOnClickListener {
             CancelAlarm()
+        }
+
+        GoBackButton_Map = findViewById(R.id.GoBackButton_Map)
+        AlarmCancelButton.setOnClickListener {
+            finish()
         }
 
         val mapFragment = supportFragmentManager.findFragmentById(R.id.alarmMap) as SupportMapFragment
@@ -81,21 +87,25 @@ class AlarmActivateActivity : FragmentActivity(), OnMapReadyCallback {
         createLoadingDialog() // 로딩 다이얼로그 생성
         showLoadingDialog() // 초기 로딩 다이얼로그 표시
 
-
         CurrentDestinationText.text = "목적지 :\n\n${Data.DestinationLocationAddress}"
-
 
         StartAlarm()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        stopLocationService()
+    }
 
     private fun StartAlarm() {
         Data.bAlarmAvailable = true
+        startLocationService()
     }
 
     private fun CancelAlarm() {
         Data.bAlarmAvailable = false
         Data.ClosetestAlarmDistance = null
+        finish()
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -191,9 +201,9 @@ class AlarmActivateActivity : FragmentActivity(), OnMapReadyCallback {
         }
 
         val distance = calculateDistance(currentMarker!!.position, destinationMarker!!.position)
-        CheckShouldAlertAlarm(distance)
+        CheckAlarmDistance(distance)
 
-        DistanceShowText.text = "$distance m 남음"
+        DistanceShowText.text = "${(distance).toInt()} m 남음"
         updatePolyline()
     }
 
@@ -237,7 +247,15 @@ class AlarmActivateActivity : FragmentActivity(), OnMapReadyCallback {
         override fun onProviderDisabled(provider: String) {}
     }
 
-    private fun CheckShouldAlertAlarm(distance : Float) {
+    private fun CheckAlarmDistance(distance : Float) {
+
+        var BeforeAlarmDistance = Data.ClosetestAlarmDistance
+
+        if(distance <= Data.AccepRadius)
+        {
+            CancelAlarm()
+            return
+        }
 
         if(Data.AlarmUnitDistance == null) {
             Toast.makeText(this, "Please Set Data.AlarmUnitDistance", Toast.LENGTH_SHORT)
@@ -246,37 +264,21 @@ class AlarmActivateActivity : FragmentActivity(), OnMapReadyCallback {
 
         var _AlarmUnitDistance = Data.AlarmUnitDistance!!
 
-
-        if (!isInitalLocationGetted)
-        {
-
-        }else
-        {
-            if(Data.ClosetestAlarmDistance == null) {
-                Toast.makeText(this, "Please Set Data.ClosetestAlarmDistance", Toast.LENGTH_SHORT)
-                return
-            }
-
-            var _ClosetestAlarmDistance = Data.ClosetestAlarmDistance!!
-
-            if(_ClosetestAlarmDistance >= distance)
-            {
-                _ClosetestAlarmDistance -= _AlarmUnitDistance
-                Data.ClosetestAlarmDistance = _ClosetestAlarmDistance
-                ShowAlarm()
-            }else
-            {
-
-            }
-
-        }
+        val loopI = (distance - Data.AccepRadius) / _AlarmUnitDistance
+        val i = Math.floor(loopI.toDouble()).toInt()
+        val ClosetestAlarmDistance = Data.AccepRadius + i * _AlarmUnitDistance
+        NextAlarmDistanceShowText.text = "다음알림까지 -> ${(distance - ClosetestAlarmDistance).toInt()}m"
 
     }
 
 
-
-    private fun ShowAlarm () {
-        // 이 부분 구현해 주세요
+    private fun startLocationService() {
+        val intent = Intent(this, LocationService::class.java)
+        ContextCompat.startForegroundService(this, intent)
     }
 
+    private fun stopLocationService() {
+        val intent = Intent(this, LocationService::class.java)
+        stopService(intent)
+    }
 }
