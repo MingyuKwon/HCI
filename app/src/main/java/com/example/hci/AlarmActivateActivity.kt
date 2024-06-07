@@ -9,7 +9,10 @@ import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
+import android.widget.Button
 import android.widget.FrameLayout
+import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -24,25 +27,32 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.Polyline
+import com.google.android.gms.maps.model.PolylineOptions
 import java.util.Locale
 
 class AlarmActivateActivity : FragmentActivity(), OnMapReadyCallback {
-
 
     private lateinit var gMap: GoogleMap
     private lateinit var map: FrameLayout
     private lateinit var locationManager: LocationManager
     private lateinit var loadingDialog: AlertDialog
+    private lateinit var DistanceShowText: TextView
+    private lateinit var CurrentDestinationText: TextView
+
+    lateinit var AlarmCancelButton: Button
+
+
 
     private val LOCATION_PERMISSION_REQUEST_CODE = 1
-
     private var currentMarker: Marker? = null
+    private var destinationMarker: Marker? = null
+    private var polyline: Polyline? = null
 
     private var isInitalLocationGetted: Boolean = false
 
-    private var _currentLatLng : LatLng? = null
-    private var _currentAddress : String? = null
-
+    private var _currentLatLng: LatLng? = null
+    private var _currentAddress: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,6 +65,13 @@ class AlarmActivateActivity : FragmentActivity(), OnMapReadyCallback {
         }
 
         map = findViewById(R.id.alarmMap)
+        DistanceShowText = findViewById(R.id.DistanceShowText)
+        CurrentDestinationText = findViewById(R.id.CurrentDestinationText)
+
+        AlarmCancelButton = findViewById(R.id.AlarmCancelButton)
+        AlarmCancelButton.setOnClickListener {
+            CancelAlarm()
+        }
 
         val mapFragment = supportFragmentManager.findFragmentById(R.id.alarmMap) as SupportMapFragment
         mapFragment.getMapAsync(this)
@@ -63,6 +80,22 @@ class AlarmActivateActivity : FragmentActivity(), OnMapReadyCallback {
 
         createLoadingDialog() // 로딩 다이얼로그 생성
         showLoadingDialog() // 초기 로딩 다이얼로그 표시
+
+
+        CurrentDestinationText.text = "목적지 :\n\n${Data.DestinationLocationAddress}"
+
+
+        StartAlarm()
+    }
+
+
+    private fun StartAlarm() {
+        Data.bAlarmAvailable = true
+    }
+
+    private fun CancelAlarm() {
+        Data.bAlarmAvailable = false
+        Data.ClosetestAlarmDistance = null
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -82,6 +115,7 @@ class AlarmActivateActivity : FragmentActivity(), OnMapReadyCallback {
         builder.setCancelable(false) // 사용자가 다이얼로그를 닫을 수 없도록 설정
         loadingDialog = builder.create()
     }
+
     private fun showLoadingDialog() {
         loadingDialog.show()
     }
@@ -109,7 +143,7 @@ class AlarmActivateActivity : FragmentActivity(), OnMapReadyCallback {
         }
     }
 
-    private fun getAddressFromLatLng(latLng: LatLng) : String? {
+    private fun getAddressFromLatLng(latLng: LatLng): String? {
         val geocoder = Geocoder(this, Locale.getDefault())
         try {
             val addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
@@ -134,8 +168,8 @@ class AlarmActivateActivity : FragmentActivity(), OnMapReadyCallback {
     }
 
     private fun updateMarker(latLng: LatLng) {
-        if (!isInitalLocationGetted ) {
-            gMap.addMarker(
+        if (!isInitalLocationGetted) {
+            destinationMarker = gMap.addMarker(
                 MarkerOptions()
                     .position(Data.DestinationLocationLatng!!)
                     .title("Destination Location")
@@ -145,27 +179,55 @@ class AlarmActivateActivity : FragmentActivity(), OnMapReadyCallback {
             hideLoadingDialog()
         }
 
-        if(currentMarker == null)
-        {
-            gMap.addMarker(
+        if (currentMarker == null) {
+            currentMarker = gMap.addMarker(
                 MarkerOptions()
                     .position(latLng)
                     .title("Current Location")
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)) // 마커 색상 설정
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
             )
-        }else
-        {
+        } else {
             currentMarker?.position = latLng
         }
+
+        val distance = calculateDistance(currentMarker!!.position, destinationMarker!!.position)
+        CheckShouldAlertAlarm(distance)
+
+        DistanceShowText.text = "$distance m 남음"
+        updatePolyline()
+    }
+
+    private fun calculateDistance(latLng1: LatLng, latLng2: LatLng): Float {
+        val location1 = Location("").apply {
+            latitude = latLng1.latitude
+            longitude = latLng1.longitude
+        }
+        val location2 = Location("").apply {
+            latitude = latLng2.latitude
+            longitude = latLng2.longitude
+        }
+        return location1.distanceTo(location2)
+    }
+
+    private fun updatePolyline() {
+        polyline?.remove()
+
+        polyline = gMap.addPolyline(
+            PolylineOptions()
+                .add(currentMarker!!.position, destinationMarker!!.position)
+                .width(7f)
+                .color(ContextCompat.getColor(this, R.color.green))
+        )
     }
 
     private val locationListener = object : LocationListener {
         override fun onLocationChanged(location: Location) {
             val currentLatLng = LatLng(location.latitude, location.longitude)
-            if(!isInitalLocationGetted)
-            {
+            if (!isInitalLocationGetted) {
                 gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15f))
+
             }
+
             updateMarker(currentLatLng)
             getAddressFromLatLng(currentLatLng) // 위도와 경도로부터 주소 가져오기
         }
@@ -174,4 +236,47 @@ class AlarmActivateActivity : FragmentActivity(), OnMapReadyCallback {
         override fun onProviderEnabled(provider: String) {}
         override fun onProviderDisabled(provider: String) {}
     }
+
+    private fun CheckShouldAlertAlarm(distance : Float) {
+
+        if(Data.AlarmUnitDistance == null) {
+            Toast.makeText(this, "Please Set Data.AlarmUnitDistance", Toast.LENGTH_SHORT)
+            return
+        }
+
+        var _AlarmUnitDistance = Data.AlarmUnitDistance!!
+
+
+        if (!isInitalLocationGetted)
+        {
+
+        }else
+        {
+            if(Data.ClosetestAlarmDistance == null) {
+                Toast.makeText(this, "Please Set Data.ClosetestAlarmDistance", Toast.LENGTH_SHORT)
+                return
+            }
+
+            var _ClosetestAlarmDistance = Data.ClosetestAlarmDistance!!
+
+            if(_ClosetestAlarmDistance >= distance)
+            {
+                _ClosetestAlarmDistance -= _AlarmUnitDistance
+                Data.ClosetestAlarmDistance = _ClosetestAlarmDistance
+                ShowAlarm()
+            }else
+            {
+
+            }
+
+        }
+
+    }
+
+
+
+    private fun ShowAlarm () {
+        // 이 부분 구현해 주세요
+    }
+
 }

@@ -5,8 +5,38 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AlarmActivateActivity">
+    tools:context=".AlarmActivateActivity"
+    android:background="@drawable/gray_background"
+    >
+    <Button
+        android:id="@+id/GoBackButton_Map"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="돌아가기"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
 
+        android:layout_marginTop="40dp"
+        android:layout_marginRight="30dp"
+        android:background="@drawable/defaultbutton"
+
+        />
+
+    <Button
+        android:id="@+id/AlarmCancelButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="190dp"
+        android:layout_marginTop="70dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/favoritedeletebutton"
+        android:text="알람 해제"
+        android:textSize="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/alarmMap"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/alarmMap"
+        app:layout_constraintTop_toBottomOf="@+id/GoBackButton_Map" />
 
     <fragment
         android:id="@+id/alarmMap"
@@ -14,15 +44,63 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginLeft="30dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="220dp"
         android:layout_marginRight="30dp"
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="170dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 
-
+    <TextView
+        android:id="@+id/DistanceShowText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="목적지 까지 남은 거리"
+        android:textSize="28dp"
+        android:textStyle="bold"
+        android:textAlignment="center"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        app:layout_constraintEnd_toEndOf="@+id/alarmMap"
+        app:layout_constraintStart_toStartOf="@+id/alarmMap"
+        app:layout_constraintTop_toBottomOf="@+id/alarmMap"
+        android:background="@drawable/distance_show_text"
         />
+
+    <TextView
+        android:id="@+id/NextAlarmDistanceShowText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/nextalrarmdistanceshowtext"
+        android:text="다음 알림까지 -> m"
+        android:textAlignment="center"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="@+id/alarmMap"
+        app:layout_constraintHorizontal_bias="0.225"
+        app:layout_constraintStart_toStartOf="@+id/alarmMap"
+
+        app:layout_constraintTop_toBottomOf="@+id/DistanceShowText" />
+
+    <TextView
+        android:id="@+id/CurrentDestinationText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="20dp"
+        android:text="목적지 :\n"
+        android:textSize="22dp"
+        android:textStyle="bold"
+        android:layout_marginTop="60dp"
+        app:layout_constraintBottom_toBottomOf="@+id/GoBackButton_Map"
+        app:layout_constraintEnd_toStartOf="@+id/GoBackButton_Map"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/GoBackButton_Map" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
