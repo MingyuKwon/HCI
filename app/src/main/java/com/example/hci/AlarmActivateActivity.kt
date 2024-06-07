@@ -3,6 +3,7 @@ package com.example.hci
 import android.Manifest
 import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.location.Location
@@ -41,9 +42,8 @@ class AlarmActivateActivity : FragmentActivity(), OnMapReadyCallback {
     private lateinit var CurrentDestinationText: TextView
     private lateinit var NextAlarmDistanceShowText: TextView
 
-
-
     lateinit var AlarmCancelButton: Button
+    lateinit var GoBackButton_Map: Button
 
 
 
@@ -53,9 +53,6 @@ class AlarmActivateActivity : FragmentActivity(), OnMapReadyCallback {
     private var polyline: Polyline? = null
 
     private var isInitalLocationGetted: Boolean = false
-
-    private var _currentLatLng: LatLng? = null
-    private var _currentAddress: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,6 +74,11 @@ class AlarmActivateActivity : FragmentActivity(), OnMapReadyCallback {
             CancelAlarm()
         }
 
+        GoBackButton_Map = findViewById(R.id.GoBackButton_Map)
+        AlarmCancelButton.setOnClickListener {
+            finish()
+        }
+
         val mapFragment = supportFragmentManager.findFragmentById(R.id.alarmMap) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
@@ -85,16 +87,19 @@ class AlarmActivateActivity : FragmentActivity(), OnMapReadyCallback {
         createLoadingDialog() // 로딩 다이얼로그 생성
         showLoadingDialog() // 초기 로딩 다이얼로그 표시
 
-
         CurrentDestinationText.text = "목적지 :\n\n${Data.DestinationLocationAddress}"
-
 
         StartAlarm()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        stopLocationService()
+    }
 
     private fun StartAlarm() {
         Data.bAlarmAvailable = true
+        startLocationService()
     }
 
     private fun CancelAlarm() {
@@ -196,7 +201,7 @@ class AlarmActivateActivity : FragmentActivity(), OnMapReadyCallback {
         }
 
         val distance = calculateDistance(currentMarker!!.position, destinationMarker!!.position)
-        CheckShouldAlertAlarm(distance)
+        CheckAlarmDistance(distance)
 
         DistanceShowText.text = "${(distance).toInt()} m 남음"
         updatePolyline()
@@ -242,13 +247,12 @@ class AlarmActivateActivity : FragmentActivity(), OnMapReadyCallback {
         override fun onProviderDisabled(provider: String) {}
     }
 
-    private fun CheckShouldAlertAlarm(distance : Float) {
+    private fun CheckAlarmDistance(distance : Float) {
 
         var BeforeAlarmDistance = Data.ClosetestAlarmDistance
 
         if(distance <= Data.AccepRadius)
         {
-            ShowAlarm(true, distance)
             CancelAlarm()
             return
         }
@@ -260,27 +264,21 @@ class AlarmActivateActivity : FragmentActivity(), OnMapReadyCallback {
 
         var _AlarmUnitDistance = Data.AlarmUnitDistance!!
 
-
         val loopI = (distance - Data.AccepRadius) / _AlarmUnitDistance
         val i = Math.floor(loopI.toDouble()).toInt()
-        Data.ClosetestAlarmDistance = Data.AccepRadius + i * _AlarmUnitDistance
-
-        NextAlarmDistanceShowText.text = "다음알림까지 -> ${(distance - Data.ClosetestAlarmDistance!!).toInt()}m"
-
-        if(BeforeAlarmDistance != null && BeforeAlarmDistance != Data.ClosetestAlarmDistance)
-        {
-            ShowAlarm(false, BeforeAlarmDistance)
-        }
+        val ClosetestAlarmDistance = Data.AccepRadius + i * _AlarmUnitDistance
+        NextAlarmDistanceShowText.text = "다음알림까지 -> ${(distance - ClosetestAlarmDistance).toInt()}m"
 
     }
 
 
-
-    private fun ShowAlarm (bisFinal : Boolean, leftDistance : Float) {
-        // 이 부분 구현해 주세요
-        Toast.makeText(this, "ShowAlarm : ${bisFinal} ${leftDistance}", Toast.LENGTH_SHORT)
-
-        // bisFinal이 true인 경우는, 전체 거리가 도착 지점 근처 acceptRadius 안에 들어온 경우, 마지막으로 울릴 알람입니다.
+    private fun startLocationService() {
+        val intent = Intent(this, LocationService::class.java)
+        ContextCompat.startForegroundService(this, intent)
     }
 
+    private fun stopLocationService() {
+        val intent = Intent(this, LocationService::class.java)
+        stopService(intent)
+    }
 }
