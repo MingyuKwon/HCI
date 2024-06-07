@@ -14,6 +14,10 @@ class Data {
         var DestinationLocationAddress: String? = null
 
         var FavoritesAddress : Array<String?>? = null
+        var bAlarmAvailable : Boolean = false
+        var ClosetestAlarmDistance : Float? = null
+        var AlarmUnitDistance : Float? = null
+        var AccepRadius : Float = 50.0f
 
         private const val PREFS_NAME = "UserSettings"
         private const val KEY_FAVORITES = "Favorites_address"

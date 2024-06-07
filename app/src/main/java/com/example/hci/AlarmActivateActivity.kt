@@ -9,8 +9,10 @@ import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
+import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -38,6 +40,9 @@ class AlarmActivateActivity : FragmentActivity(), OnMapReadyCallback {
     private lateinit var DistanceShowText: TextView
     private lateinit var CurrentDestinationText: TextView
 
+    lateinit var AlarmCancelButton: Button
+
+
 
     private val LOCATION_PERMISSION_REQUEST_CODE = 1
     private var currentMarker: Marker? = null
@@ -63,6 +68,11 @@ class AlarmActivateActivity : FragmentActivity(), OnMapReadyCallback {
         DistanceShowText = findViewById(R.id.DistanceShowText)
         CurrentDestinationText = findViewById(R.id.CurrentDestinationText)
 
+        AlarmCancelButton = findViewById(R.id.AlarmCancelButton)
+        AlarmCancelButton.setOnClickListener {
+            CancelAlarm()
+        }
+
         val mapFragment = supportFragmentManager.findFragmentById(R.id.alarmMap) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
@@ -73,6 +83,19 @@ class AlarmActivateActivity : FragmentActivity(), OnMapReadyCallback {
 
 
         CurrentDestinationText.text = "목적지 :\n\n${Data.DestinationLocationAddress}"
+
+
+        StartAlarm()
+    }
+
+
+    private fun StartAlarm() {
+        Data.bAlarmAvailable = true
+    }
+
+    private fun CancelAlarm() {
+        Data.bAlarmAvailable = false
+        Data.ClosetestAlarmDistance = null
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -168,6 +191,7 @@ class AlarmActivateActivity : FragmentActivity(), OnMapReadyCallback {
         }
 
         val distance = calculateDistance(currentMarker!!.position, destinationMarker!!.position)
+        CheckShouldAlertAlarm(distance)
 
         DistanceShowText.text = "$distance m 남음"
         updatePolyline()
@@ -201,7 +225,9 @@ class AlarmActivateActivity : FragmentActivity(), OnMapReadyCallback {
             val currentLatLng = LatLng(location.latitude, location.longitude)
             if (!isInitalLocationGetted) {
                 gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15f))
+
             }
+
             updateMarker(currentLatLng)
             getAddressFromLatLng(currentLatLng) // 위도와 경도로부터 주소 가져오기
         }
@@ -210,4 +236,47 @@ class AlarmActivateActivity : FragmentActivity(), OnMapReadyCallback {
         override fun onProviderEnabled(provider: String) {}
         override fun onProviderDisabled(provider: String) {}
     }
+
+    private fun CheckShouldAlertAlarm(distance : Float) {
+
+        if(Data.AlarmUnitDistance == null) {
+            Toast.makeText(this, "Please Set Data.AlarmUnitDistance", Toast.LENGTH_SHORT)
+            return
+        }
+
+        var _AlarmUnitDistance = Data.AlarmUnitDistance!!
+
+
+        if (!isInitalLocationGetted)
+        {
+
+        }else
+        {
+            if(Data.ClosetestAlarmDistance == null) {
+                Toast.makeText(this, "Please Set Data.ClosetestAlarmDistance", Toast.LENGTH_SHORT)
+                return
+            }
+
+            var _ClosetestAlarmDistance = Data.ClosetestAlarmDistance!!
+
+            if(_ClosetestAlarmDistance >= distance)
+            {
+                _ClosetestAlarmDistance -= _AlarmUnitDistance
+                Data.ClosetestAlarmDistance = _ClosetestAlarmDistance
+                ShowAlarm()
+            }else
+            {
+
+            }
+
+        }
+
+    }
+
+
+
+    private fun ShowAlarm () {
+        // 이 부분 구현해 주세요
+    }
+
 }
