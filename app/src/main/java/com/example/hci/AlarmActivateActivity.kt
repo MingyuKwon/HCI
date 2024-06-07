@@ -39,6 +39,9 @@ class AlarmActivateActivity : FragmentActivity(), OnMapReadyCallback {
     private lateinit var loadingDialog: AlertDialog
     private lateinit var DistanceShowText: TextView
     private lateinit var CurrentDestinationText: TextView
+    private lateinit var NextAlarmDistanceShowText: TextView
+
+
 
     lateinit var AlarmCancelButton: Button
 
@@ -67,6 +70,7 @@ class AlarmActivateActivity : FragmentActivity(), OnMapReadyCallback {
         map = findViewById(R.id.alarmMap)
         DistanceShowText = findViewById(R.id.DistanceShowText)
         CurrentDestinationText = findViewById(R.id.CurrentDestinationText)
+        NextAlarmDistanceShowText = findViewById(R.id.NextAlarmDistanceShowText)
 
         AlarmCancelButton = findViewById(R.id.AlarmCancelButton)
         AlarmCancelButton.setOnClickListener {
@@ -96,6 +100,7 @@ class AlarmActivateActivity : FragmentActivity(), OnMapReadyCallback {
     private fun CancelAlarm() {
         Data.bAlarmAvailable = false
         Data.ClosetestAlarmDistance = null
+        finish()
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -193,7 +198,7 @@ class AlarmActivateActivity : FragmentActivity(), OnMapReadyCallback {
         val distance = calculateDistance(currentMarker!!.position, destinationMarker!!.position)
         CheckShouldAlertAlarm(distance)
 
-        DistanceShowText.text = "$distance m 남음"
+        DistanceShowText.text = "${(distance).toInt()} m 남음"
         updatePolyline()
     }
 
@@ -239,6 +244,15 @@ class AlarmActivateActivity : FragmentActivity(), OnMapReadyCallback {
 
     private fun CheckShouldAlertAlarm(distance : Float) {
 
+        var BeforeAlarmDistance = Data.ClosetestAlarmDistance
+
+        if(distance <= Data.AccepRadius)
+        {
+            ShowAlarm(true, distance)
+            CancelAlarm()
+            return
+        }
+
         if(Data.AlarmUnitDistance == null) {
             Toast.makeText(this, "Please Set Data.AlarmUnitDistance", Toast.LENGTH_SHORT)
             return
@@ -247,36 +261,26 @@ class AlarmActivateActivity : FragmentActivity(), OnMapReadyCallback {
         var _AlarmUnitDistance = Data.AlarmUnitDistance!!
 
 
-        if (!isInitalLocationGetted)
+        val loopI = (distance - Data.AccepRadius) / _AlarmUnitDistance
+        val i = Math.floor(loopI.toDouble()).toInt()
+        Data.ClosetestAlarmDistance = Data.AccepRadius + i * _AlarmUnitDistance
+
+        NextAlarmDistanceShowText.text = "다음알림까지 -> ${(distance - Data.ClosetestAlarmDistance!!).toInt()}m"
+
+        if(BeforeAlarmDistance != null && BeforeAlarmDistance != Data.ClosetestAlarmDistance)
         {
-
-        }else
-        {
-            if(Data.ClosetestAlarmDistance == null) {
-                Toast.makeText(this, "Please Set Data.ClosetestAlarmDistance", Toast.LENGTH_SHORT)
-                return
-            }
-
-            var _ClosetestAlarmDistance = Data.ClosetestAlarmDistance!!
-
-            if(_ClosetestAlarmDistance >= distance)
-            {
-                _ClosetestAlarmDistance -= _AlarmUnitDistance
-                Data.ClosetestAlarmDistance = _ClosetestAlarmDistance
-                ShowAlarm()
-            }else
-            {
-
-            }
-
+            ShowAlarm(false, BeforeAlarmDistance)
         }
 
     }
 
 
 
-    private fun ShowAlarm () {
+    private fun ShowAlarm (bisFinal : Boolean, leftDistance : Float) {
         // 이 부분 구현해 주세요
+        Toast.makeText(this, "ShowAlarm : ${bisFinal} ${leftDistance}", Toast.LENGTH_SHORT)
+
+        // bisFinal이 true인 경우는, 전체 거리가 도착 지점 근처 acceptRadius 안에 들어온 경우, 마지막으로 울릴 알람입니다.
     }
 
 }
