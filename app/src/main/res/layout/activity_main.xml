@@ -14,41 +14,30 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="-15dp"
         android:layout_marginRight="-15dp"
-        android:layout_marginBottom="-70dp"
+        android:layout_marginBottom="-80dp"
         android:background="@drawable/text_outline"
-        android:text="\n\n\n\n\n\n\n\n\n\n\n\n"
+        android:text="\n\n\n\n\n\n\n\n\n\n\n"
         android:textAlignment="center"
 
         android:textSize="15dp"
 
-        app:layout_constraintBottom_toTopOf="@+id/ShowMapButton"
-        app:layout_constraintEnd_toEndOf="@+id/ShowMapButton"
+        app:layout_constraintBottom_toTopOf="@+id/DestinationShowButton"
+        app:layout_constraintEnd_toEndOf="@+id/DestinationShowButton"
         app:layout_constraintHorizontal_bias="0.517"
-        app:layout_constraintStart_toStartOf="@+id/ShowMapButton" />
+        app:layout_constraintStart_toStartOf="@+id/DestinationShowButton" />
 
     <Spinner
         android:id="@+id/FavoriteSpinner"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="130dp"
+        android:layout_marginBottom="80dp"
         android:background="@drawable/favorites_outline"
         app:layout_constraintBottom_toTopOf="@+id/DestinationShowButton"
-        app:layout_constraintEnd_toEndOf="@+id/ShowMapButton"
+        app:layout_constraintEnd_toEndOf="@+id/DestinationShowButton"
 
-        app:layout_constraintStart_toStartOf="@+id/ShowMapButton" />
+        app:layout_constraintStart_toStartOf="@+id/DestinationShowButton" />
 
-    <Button
-        android:id="@+id/ShowMapButton"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="420dp"
-        android:text="도착지 정하기"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:background="@drawable/defaultbutton"
 
-        />
 
     <Button
         android:id="@+id/FavoriteAddButton"
@@ -78,28 +67,29 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="알림 방법 설정하기"
-        android:layout_marginTop="190dp"
-        app:layout_constraintEnd_toEndOf="@+id/ShowMapButton"
-        app:layout_constraintStart_toStartOf="@+id/ShowMapButton"
-        app:layout_constraintTop_toBottomOf="@+id/ShowMapButton"
+        android:layout_marginTop="220dp"
+        app:layout_constraintEnd_toEndOf="@+id/DestinationShowButton"
+        app:layout_constraintStart_toStartOf="@+id/DestinationShowButton"
+        app:layout_constraintTop_toBottomOf="@+id/DestinationShowButton"
         android:background="@drawable/defaultbutton"
 
         />
 
     <TextView
         android:id="@+id/DestinationShowButton"
-        android:layout_width="0dp"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="30dp"
+        android:layout_marginTop="360dp"
         android:background="@drawable/text_outline"
-        android:text="Destination"
+
+        android:text="목적지를 입력해 주세요"
         android:textAlignment="center"
-
         android:textSize="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.504"
+        app:layout_constraintStart_toStartOf="parent"
 
-        app:layout_constraintBottom_toTopOf="@+id/ShowMapButton"
-        app:layout_constraintEnd_toEndOf="@+id/ShowMapButton"
-        app:layout_constraintStart_toStartOf="@+id/ShowMapButton" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textView"
@@ -107,11 +97,11 @@
         android:layout_height="wrap_content"
         android:text="주먹구구 대중교통"
         app:layout_constraintBottom_toTopOf="@+id/FavoriteSpinner"
-        app:layout_constraintEnd_toEndOf="@+id/ShowMapButton"
-        app:layout_constraintStart_toStartOf="@+id/ShowMapButton"
+        app:layout_constraintEnd_toEndOf="@+id/DestinationShowButton"
+        app:layout_constraintStart_toStartOf="@+id/DestinationShowButton"
         android:textSize="35dp"
         android:textColor="@color/black"
-        android:layout_marginBottom="40dp"
+        android:layout_marginBottom="120dp"
         android:textStyle="bold"
 
         />
@@ -121,10 +111,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/ShowSettingButton"
-        app:layout_constraintEnd_toEndOf="@+id/ShowMapButton"
+        app:layout_constraintEnd_toEndOf="@+id/DestinationShowButton"
         app:layout_constraintHorizontal_bias="0.494"
-        app:layout_constraintStart_toStartOf="@+id/ShowMapButton"
-        app:layout_constraintTop_toBottomOf="@+id/ShowMapButton"
+        app:layout_constraintStart_toStartOf="@+id/DestinationShowButton"
+        app:layout_constraintTop_toBottomOf="@+id/DestinationShowButton"
         app:layout_constraintVertical_bias="0.492"
         app:srcCompat="@drawable/twotone_alarm_on_24" />
 

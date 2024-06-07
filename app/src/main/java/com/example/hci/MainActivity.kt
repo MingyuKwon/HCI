@@ -20,7 +20,6 @@ import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var showmapButton: Button
     lateinit var SettingButton: Button
     lateinit var AlarmStartButton: ImageButton
 
@@ -42,14 +41,13 @@ class MainActivity : AppCompatActivity() {
         FavoriteSpinner = findViewById(R.id.FavoriteSpinner)
         favoriteAddButton = findViewById(R.id.FavoriteAddButton)
         favoriteDeleteButton = findViewById(R.id.FavoriteDeleteButton)
-        showmapButton = findViewById(R.id.ShowMapButton)
         SettingButton = findViewById(R.id.ShowSettingButton)
 
         AlarmStartButton = findViewById(R.id.AlarmStartButton)
 
         DestinationShowText = findViewById(R.id.DestinationShowButton)
 
-        showmapButton.setOnClickListener {
+        DestinationShowText.setOnClickListener {
             val intent = Intent(this, MapActivity::class.java)
             startActivity(intent)
         }
@@ -109,7 +107,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun SetDestinationText() {
-        DestinationShowText.text = Data.DestinationLocationAddress
+        if(Data.DestinationLocationAddress == null)
+        {
+            DestinationShowText.text = "도착지를 입력하세요"
+        }else
+        {
+            DestinationShowText.text = Data.DestinationLocationAddress
+        }
     }
 
     private fun SetFavoriteSpinner() {
