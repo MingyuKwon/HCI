@@ -10,6 +10,7 @@ import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.TextView
@@ -43,6 +44,7 @@ class AlarmActivateActivity : FragmentActivity(), OnMapReadyCallback {
     private lateinit var NextAlarmDistanceShowText: TextView
 
     lateinit var AlarmCancelButton: Button
+    lateinit var AlarmReactivateButton: Button
     lateinit var GoBackButton_Map: Button
 
 
@@ -72,10 +74,17 @@ class AlarmActivateActivity : FragmentActivity(), OnMapReadyCallback {
         AlarmCancelButton = findViewById(R.id.AlarmCancelButton)
         AlarmCancelButton.setOnClickListener {
             CancelAlarm()
+            SetButtonState()
+        }
+
+        AlarmReactivateButton = findViewById(R.id.AlarmReactivateButton)
+        AlarmReactivateButton.setOnClickListener {
+            StartAlarm()
+            SetButtonState()
         }
 
         GoBackButton_Map = findViewById(R.id.GoBackButton_Map)
-        AlarmCancelButton.setOnClickListener {
+        GoBackButton_Map.setOnClickListener {
             finish()
         }
 
@@ -90,11 +99,31 @@ class AlarmActivateActivity : FragmentActivity(), OnMapReadyCallback {
         CurrentDestinationText.text = "목적지 :\n\n${Data.DestinationLocationAddress}"
 
         StartAlarm()
+
+        SetButtonState()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        stopLocationService()
+        CancelAlarm()
+    }
+
+    private fun SetButtonState() {
+        if(Data.bAlarmAvailable)
+        {
+            AlarmCancelButton.visibility = View.VISIBLE
+            AlarmCancelButton.isActivated = true
+
+            AlarmReactivateButton.visibility = View.INVISIBLE
+            AlarmReactivateButton.isActivated = false
+        }else
+        {
+            AlarmReactivateButton.visibility = View.VISIBLE
+            AlarmReactivateButton.isActivated = true
+
+            AlarmCancelButton.visibility = View.INVISIBLE
+            AlarmCancelButton.isActivated = false
+        }
     }
 
     private fun StartAlarm() {
@@ -105,7 +134,7 @@ class AlarmActivateActivity : FragmentActivity(), OnMapReadyCallback {
     private fun CancelAlarm() {
         Data.bAlarmAvailable = false
         Data.ClosetestAlarmDistance = null
-        finish()
+        stopLocationService()
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
