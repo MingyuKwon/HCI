@@ -38,6 +38,23 @@
         app:layout_constraintStart_toStartOf="@+id/alarmMap"
         app:layout_constraintTop_toBottomOf="@+id/GoBackButton_Map" />
 
+
+    <Button
+        android:id="@+id/AlarmReactivateButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="190dp"
+        android:layout_marginTop="70dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/favoritebutton"
+        android:text="알람 활성화"
+        android:textSize="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/alarmMap"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/alarmMap"
+        app:layout_constraintTop_toBottomOf="@+id/GoBackButton_Map" />
+
     <fragment
         android:id="@+id/alarmMap"
         android:name="com.google.android.gms.maps.SupportMapFragment"
