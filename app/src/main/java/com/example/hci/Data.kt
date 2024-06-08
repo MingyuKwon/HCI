@@ -14,6 +14,15 @@ class Data {
         var DestinationLocationAddress: String? = null
 
         var FavoritesAddress : Array<String?>? = null
+
+        // 지훈~
+        var popupAlarmAvailable : Boolean = false
+        var bellAlarmAvailable : Boolean = false
+        var preAlarmDistance : Int = 0
+        var bellName : Int = 0
+        var bellSound : Int = 0
+        var bibrationMount : Int = 0
+
         var bAlarmAvailable : Boolean = false
         var ClosetestAlarmDistance : Float? = null
         var AlarmUnitDistance : Float? = 100.0f

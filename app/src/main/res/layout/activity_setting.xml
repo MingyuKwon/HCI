@@ -5,6 +5,154 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/backgroundimage"
     tools:context=".SettingActivity">
+
+    <!-- 뒤로가기 -->
+    <Button
+        android:id="@+id/buttonToBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="30dp"
+        android:text="뒤로가기"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- 제목 및 부제 -->
+    <TextView
+        android:id="@+id/TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="주먹구구 대중교통"
+        android:textColor="@color/black"
+        android:textSize="35dp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="100dp"
+        android:layout_marginLeft="30dp"
+        tools:ignore="MissingConstraints" />
+
+
+    <TextView
+        android:id="@+id/TextViewSetting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="알림 방법 설정"
+        android:textColor="@color/black"
+        android:textSize="25dp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/TextView"
+        tools:ignore="MissingConstraints"
+        app:layout_constraintStart_toStartOf="@+id/TextView"
+        />
+
+    <!-- 팝업 알림 여부 -->
+    <TextView
+        android:id="@+id/TextViewPopup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="팝업 알림"
+        android:textColor="@color/black"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/TextViewSetting"
+        app:layout_constraintStart_toStartOf="@+id/TextView"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="70dp"
+        tools:ignore="MissingConstraints"
+        />
+
+    <Switch
+        android:id="@+id/SwitchPopup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@+id/TextViewPopup"
+        app:layout_constraintStart_toStartOf="@+id/TextViewPopup"
+        android:layout_marginLeft="200dp"
+        tools:ignore="UseSwitchCompatOrMaterialXml"
+        />
+
+
+    <!-- 사전 알림 설정 -->
+    <Spinner
+        android:id="@+id/SpinnerPreAlarm"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="130dp"
+        android:background="@drawable/favorites_outline"
+        app:layout_constraintTop_toBottomOf="@+id/TextViewPopup"
+        app:layout_constraintStart_toStartOf="@+id/TextView"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="30dp"
+        tools:ignore="MissingConstraints"
+        />
+
+    <Switch
+        android:id="@+id/SwitchPreAlarm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@+id/SpinnerPreAlarm"
+        app:layout_constraintStart_toStartOf="@+id/SpinnerPreAlarm"
+        android:layout_marginLeft="200dp"
+        android:layout_marginTop="10dp"
+        tools:ignore="UseSwitchCompatOrMaterialXml"
+        />
+
+    <!-- 소리 설정 -->
+    <Spinner
+        android:id="@+id/SpinnerBell"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="130dp"
+        android:background="@drawable/favorites_outline"
+        app:layout_constraintTop_toBottomOf="@+id/SpinnerPreAlarm"
+        app:layout_constraintStart_toStartOf="@+id/TextView"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="30dp"
+        tools:ignore="MissingConstraints"
+        />
+
+    <Switch
+        android:id="@+id/SwitchBell"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@+id/SpinnerBell"
+        app:layout_constraintStart_toStartOf="@+id/SpinnerBell"
+        android:layout_marginLeft="200dp"
+        android:layout_marginTop="10dp"
+
+        tools:ignore="UseSwitchCompatOrMaterialXml"
+        />
+
+    <!-- 소리 세기 -->
+    <Spinner
+        android:id="@+id/SpinnerSound"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="130dp"
+        android:background="@drawable/favorites_outline"
+        app:layout_constraintTop_toBottomOf="@+id/SpinnerBell"
+        app:layout_constraintStart_toStartOf="@+id/TextView"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="30dp"
+        tools:ignore="MissingConstraints"
+        />
+
+    <!-- 진동 세기 -->
+    <Spinner
+        android:id="@+id/SpinnerBibration"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="130dp"
+        android:background="@drawable/favorites_outline"
+        app:layout_constraintTop_toBottomOf="@+id/SpinnerSound"
+        app:layout_constraintStart_toStartOf="@+id/TextView"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="30dp"
+        tools:ignore="MissingConstraints"
+        />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
