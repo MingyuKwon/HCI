@@ -22,7 +22,7 @@ class SettingActivity : AppCompatActivity() {
     lateinit var SpinnerBibration: Spinner
 
     private lateinit var SwitchPopup: Switch
-    private lateinit var SwitchPreAlarm: Switch
+    private lateinit var SwitchVibration: Switch
     private lateinit var SwitchBell: Switch
 
     lateinit var ButtonToBack : Button
@@ -38,17 +38,16 @@ class SettingActivity : AppCompatActivity() {
         }
 
         // 지훈 작성~
-        SpinnerPreAlarm = findViewById(R.id.SpinnerPreAlarm)
+        SpinnerPreAlarm = findViewById(R.id.SpinnerBibration)
         SpinnerBell = findViewById(R.id.SpinnerBell)
         SpinnerSound = findViewById(R.id.SpinnerSound)
-        SpinnerBibration = findViewById(R.id.SpinnerBibration)
+        SpinnerBibration = findViewById(R.id.SpinnerPreAlarm)
 
         SwitchPopup = findViewById(R.id.SwitchPopup)
-        SwitchPreAlarm = findViewById(R.id.SwitchPreAlarm)
+        SwitchVibration = findViewById(R.id.SwitchVibration)
         SwitchBell = findViewById(R.id.SwitchBell)
 
         ButtonToBack = findViewById(R.id.buttonToBack)
-
 
         setSpinner()
         setSwitch()
@@ -103,6 +102,8 @@ class SettingActivity : AppCompatActivity() {
                         Data.bellName = 3
                     }
                 }
+
+                SpinnerBell.setSelection(0)
             }
             override fun onNothingSelected(parent: AdapterView<*>) {
 
@@ -122,6 +123,8 @@ class SettingActivity : AppCompatActivity() {
                         Data.bellSound = 3
                     }
                 }
+
+                SpinnerSound.setSelection(0)
             }
             override fun onNothingSelected(parent: AdapterView<*>) {
 
@@ -141,6 +144,8 @@ class SettingActivity : AppCompatActivity() {
                         Data.bibrationMount = 3
                     }
                 }
+
+                SpinnerBibration.setSelection(0)
             }
             override fun onNothingSelected(parent: AdapterView<*>) {
 
@@ -158,7 +163,7 @@ class SettingActivity : AppCompatActivity() {
                 Data.popupAlarmAvailable = false
             }
         }
-        SwitchPreAlarm.setOnCheckedChangeListener { CompoundButton, onSwitch ->
+        SwitchVibration.setOnCheckedChangeListener { CompoundButton, onSwitch ->
             if(onSwitch){
                 Data.bAlarmAvailable = true
             }

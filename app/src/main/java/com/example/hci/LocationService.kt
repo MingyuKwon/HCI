@@ -93,12 +93,15 @@ class LocationService : Service() {
             return
         }
 
+        Data.bAlarmAvailable = true
+
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0L, 0f, locationListener)
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0L, 0f, locationListener)
     }
 
     private fun stopLocationUpdates() {
         locationManager.removeUpdates(locationListener)
+        Data.bAlarmAvailable = false
     }
 
     private val locationListener = object : LocationListener {
@@ -156,13 +159,30 @@ class LocationService : Service() {
 
         // 이 부분 구현해 주시면 됩니다. 우선은 기본적인 알람만 보이도록 했습니다
 
-        val notification = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle("Alarm")
-            .setContentText("Distance left: $leftDistance meters. Final: $bisFinal")
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
-            .build()
+        if(bisFinal)
+        {
+            val notification = NotificationCompat.Builder(this, CHANNEL_ID)
+                .setContentTitle("주먹구구 알림")
+                .setContentText("도착지 근처에 도착했습니다. 알림을 종료 합니다")
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .build()
+            val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            manager.notify(2, notification)
 
-        val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        manager.notify(2, notification)
+            stopLocationUpdates()
+
+
+        }else
+        {
+            val notification = NotificationCompat.Builder(this, CHANNEL_ID)
+                .setContentTitle("주먹구구 알림")
+                .setContentText("$leftDistance 미터 남았습니다")
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .build()
+
+            val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            manager.notify(2, notification)
+        }
+
     }
 }

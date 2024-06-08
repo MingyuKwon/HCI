@@ -137,7 +137,7 @@ class MainActivity : AppCompatActivity() {
         val geocoder = Geocoder(this, Locale.getDefault())
         try {
             val addresses = geocoder.getFromLocationName(address, 1)
-            if (addresses != null && isAddressNotEmpty()) {
+            if (addresses != null) {
                 val location = addresses[0]
                 val latLng = LatLng(location.latitude, location.longitude)
                 Data.DestinationLocationLatng = latLng
