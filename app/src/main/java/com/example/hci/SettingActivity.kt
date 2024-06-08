@@ -27,6 +27,11 @@ class SettingActivity : AppCompatActivity() {
 
     lateinit var ButtonToBack : Button
 
+    val itemPreAlarm = arrayOf("100m", "300m", "500m", "1000m")
+    val itemBell = arrayOf("Moonlight", "Sonata", "Ring Ding Dong")
+    val itemSound = arrayOf("작음", "중간", "큼")
+    val itemBibration = arrayOf("작음", "중간", "큼")
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -39,8 +44,8 @@ class SettingActivity : AppCompatActivity() {
 
         // 지훈 작성~
         SpinnerPreAlarm = findViewById(R.id.SpinnerBibration)
-        SpinnerBell = findViewById(R.id.SpinnerBell)
-        SpinnerSound = findViewById(R.id.SpinnerSound)
+        SpinnerBell = findViewById(R.id.SpinnerSound)
+        SpinnerSound = findViewById(R.id.SpinnerBell)
         SpinnerBibration = findViewById(R.id.SpinnerPreAlarm)
 
         SwitchPopup = findViewById(R.id.SwitchPopup)
@@ -58,10 +63,6 @@ class SettingActivity : AppCompatActivity() {
     }
 
     private fun setSpinner() {
-        val itemPreAlarm = arrayOf("사전 알림 설정", "50m 전 알림", "100m 전 알림")
-        val itemBell = arrayOf("벨소리 설정", "Moonlight", "Sonata", "Ring Ding Dong")
-        val itemSound = arrayOf("소리 세기", "1", "2", "3")
-        val itemBibration = arrayOf("진동 세기", "1", "2", "3")
 
         val adapterPreAlarm = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, itemPreAlarm)
         val adapterBell = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, itemBell)
@@ -73,15 +74,33 @@ class SettingActivity : AppCompatActivity() {
         SpinnerSound.adapter = adapterSound
         SpinnerBibration.adapter = adapterBibration
 
+
+        if(Data.AlarmUnitDistance == 100.0f)
+        {
+            SpinnerPreAlarm.setSelection(0)
+        }else if(Data.AlarmUnitDistance == 300.0f)
+        {
+            SpinnerPreAlarm.setSelection(1)
+        }else if(Data.AlarmUnitDistance == 500.0f)
+        {
+            SpinnerPreAlarm.setSelection(2)
+        }else
+        {
+            SpinnerPreAlarm.setSelection(3)
+        }
+
+
         SpinnerPreAlarm.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>,view: View,position: Int,id: Long) {
-                if (position != 0){
-                    if(position == 1){ // 50m 전 알림
-                        Data.preAlarmDistance = 50
-                    }
-                    else if(position == 2){ // 100m 전 알림
-                        Data.preAlarmDistance = 100
-                    }
+                if(position == 0){
+                    Data.AlarmUnitDistance = 100.0f
+                }
+                else if(position == 1){
+                    Data.AlarmUnitDistance = 300.0f
+                }else if(position == 2){
+                    Data.AlarmUnitDistance = 500.0f
+                }else if(position == 3){
+                    Data.AlarmUnitDistance = 1000.0f
                 }
             }
             override fun onNothingSelected(parent: AdapterView<*>) {
@@ -91,70 +110,46 @@ class SettingActivity : AppCompatActivity() {
 
         SpinnerBell.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>,view: View,position: Int,id: Long) {
-                if (position != 0){
-                    if(position == 1){
-                        Data.bellName = 1
-                    }
-                    else if(position == 2){
-                        Data.bellName = 2
-                    }
-                    else if(position == 3){
-                        Data.bellName = 3
-                    }
-                }
 
-                SpinnerBell.setSelection(0)
+                Data.bellName = position
+
             }
             override fun onNothingSelected(parent: AdapterView<*>) {
 
             }
         }
+
+        SpinnerBell.setSelection(Data.bellName)
 
         SpinnerSound.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>,view: View,position: Int,id: Long) {
-                if (position != 0){
-                    if(position == 1){
-                        Data.bellSound = 1
-                    }
-                    else if(position == 2){
-                        Data.bellSound = 2
-                    }
-                    else if(position == 3){
-                        Data.bellSound = 3
-                    }
-                }
 
-                SpinnerSound.setSelection(0)
+                Data.bellSound = position
+
             }
             override fun onNothingSelected(parent: AdapterView<*>) {
 
             }
         }
+
+        SpinnerSound.setSelection(Data.bellSound)
 
         SpinnerBibration.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>,view: View,position: Int,id: Long) {
-                if (position != 0){
-                    if(position == 1){
-                        Data.bibrationMount = 1
-                    }
-                    else if(position == 2){
-                        Data.bibrationMount = 2
-                    }
-                    else if(position == 3){
-                        Data.bibrationMount = 3
-                    }
-                }
+                Data.bibrationMount = position
 
-                SpinnerBibration.setSelection(0)
             }
             override fun onNothingSelected(parent: AdapterView<*>) {
 
             }
         }
+
+        SpinnerBibration.setSelection(Data.bibrationMount)
     }
 
     private fun setSwitch(){
 
+        SwitchPopup.isChecked = Data.popupAlarmAvailable
         SwitchPopup.setOnCheckedChangeListener { CompoundButton, onSwitch ->
             if(onSwitch){
                 Data.popupAlarmAvailable = true
@@ -163,6 +158,8 @@ class SettingActivity : AppCompatActivity() {
                 Data.popupAlarmAvailable = false
             }
         }
+
+        SwitchVibration.isChecked = Data.vibrationAvailable
         SwitchVibration.setOnCheckedChangeListener { CompoundButton, onSwitch ->
             if(onSwitch){
                 Data.bAlarmAvailable = true
@@ -171,6 +168,8 @@ class SettingActivity : AppCompatActivity() {
                 Data.bAlarmAvailable = false
             }
         }
+
+        SwitchBell.isChecked = Data.bellAlarmAvailable
         SwitchBell.setOnCheckedChangeListener { CompoundButton, onSwitch ->
             if(onSwitch){
                 Data.bellAlarmAvailable = true
