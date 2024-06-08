@@ -162,10 +162,10 @@ class SettingActivity : AppCompatActivity() {
         SwitchVibration.isChecked = Data.vibrationAvailable
         SwitchVibration.setOnCheckedChangeListener { CompoundButton, onSwitch ->
             if(onSwitch){
-                Data.bAlarmAvailable = true
+                Data.vibrationAvailable = true
             }
             else{
-                Data.bAlarmAvailable = false
+                Data.vibrationAvailable = false
             }
         }
 

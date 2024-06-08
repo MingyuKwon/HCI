@@ -14,6 +14,8 @@ import android.location.Geocoder
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
+import android.media.AudioAttributes
+import android.media.MediaPlayer
 import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
@@ -21,6 +23,9 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
+import android.os.VibrationEffect
+import android.os.Vibrator
+import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import com.google.android.gms.maps.model.LatLng
@@ -109,6 +114,7 @@ class LocationService : Service() {
     }
 
     private val locationListener = object : LocationListener {
+        @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
         override fun onLocationChanged(location: Location) {
             val currentLatLng = LatLng(location.latitude, location.longitude)
             val distance = calculateDistance(currentLatLng, destinationLatLng!!)
@@ -132,12 +138,13 @@ class LocationService : Service() {
         return location1.distanceTo(location2)
     }
 
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun checkShouldAlertAlarm(distance: Float) {
 
         // 여기에 알람 체크 로직 추가
         var BeforeAlarmDistance = Data.ClosetestAlarmDistance
 
-        showAlarm(false, 1000.0f)
+        showAlarm(false, distance)
         return
 
         if(distance <= Data.AccepRadius)
@@ -163,6 +170,8 @@ class LocationService : Service() {
         }
     }
 
+
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun showAlarm(bisFinal: Boolean, leftDistance: Float) {
         val notificationIntent = Intent(this, AlarmActivateActivity::class.java)
         val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT)
@@ -182,18 +191,7 @@ class LocationService : Service() {
             .setContentText(alarmText)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setContentIntent(pendingIntent)
-
-        if (Data.vibrationAvailable) {
-            builder.setVibrate(vibrationPattern)
-        } else {
-            builder.setVibrate(null) // 진동을 비활성화합니다.
-        }
-
-        if (Data.bellAlarmAvailable) {
-            builder.setSound(notificationSound)
-        } else {
-            builder.setSound(null) // 소리를 비활성화합니다.
-        }
+            .setPriority(NotificationCompat.PRIORITY_HIGH) // 높은 우선순위로 설정
 
         if (!Data.popupAlarmAvailable) {
             builder.setAutoCancel(true)
@@ -209,7 +207,32 @@ class LocationService : Service() {
                 manager.cancel(2)
             }, 100)
         }
+
+        if (Data.vibrationAvailable) {
+            val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                vibrator.vibrate(VibrationEffect.createWaveform(vibrationPattern, -1))
+            } else {
+                vibrator.vibrate(vibrationPattern, -1)
+            }
+        }
+
+        if (Data.bellAlarmAvailable) {
+            val mediaPlayer = MediaPlayer().apply {
+                setAudioAttributes(
+                    AudioAttributes.Builder()
+                        .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                        .setUsage(AudioAttributes.USAGE_MEDIA)
+                        .build()
+                )
+                setDataSource(this@LocationService, notificationSound)
+                prepare()
+                start()
+            }
+        }
     }
+
+
 
 
 
