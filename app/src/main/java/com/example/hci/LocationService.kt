@@ -14,9 +14,13 @@ import android.location.Geocoder
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
+import android.media.RingtoneManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.os.IBinder
+import android.os.Looper
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import com.google.android.gms.maps.model.LatLng
@@ -129,8 +133,12 @@ class LocationService : Service() {
     }
 
     private fun checkShouldAlertAlarm(distance: Float) {
+
         // 여기에 알람 체크 로직 추가
         var BeforeAlarmDistance = Data.ClosetestAlarmDistance
+
+        showAlarm(false, 1000.0f)
+        return
 
         if(distance <= Data.AccepRadius)
         {
@@ -156,33 +164,53 @@ class LocationService : Service() {
     }
 
     private fun showAlarm(bisFinal: Boolean, leftDistance: Float) {
+        val notificationIntent = Intent(this, AlarmActivateActivity::class.java)
+        val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
-        // 이 부분 구현해 주시면 됩니다. 우선은 기본적인 알람만 보이도록 했습니다
+        val notificationSound: Uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+        val vibrationPattern = longArrayOf(0, 500, 1000, 500)
 
-        if(bisFinal)
-        {
-            val notification = NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle("주먹구구 알림")
-                .setContentText("도착지 근처에 도착했습니다. 알림을 종료 합니다")
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
-                .build()
-            val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            manager.notify(2, notification)
+        var alarmText: String = "목적지에 $leftDistance M 접근중 입니다."
 
+        if (bisFinal) {
+            alarmText = "목적지 근처에 도착했습니다 알림을 종료 합니다"
             stopLocationUpdates()
-
-
-        }else
-        {
-            val notification = NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle("주먹구구 알림")
-                .setContentText("$leftDistance 미터 남았습니다")
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
-                .build()
-
-            val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            manager.notify(2, notification)
         }
 
+        val builder = NotificationCompat.Builder(this, CHANNEL_ID)
+            .setContentTitle("주먹구구 알림")
+            .setContentText(alarmText)
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setContentIntent(pendingIntent)
+
+        if (Data.vibrationAvailable) {
+            builder.setVibrate(vibrationPattern)
+        } else {
+            builder.setVibrate(null) // 진동을 비활성화합니다.
+        }
+
+        if (Data.bellAlarmAvailable) {
+            builder.setSound(notificationSound)
+        } else {
+            builder.setSound(null) // 소리를 비활성화합니다.
+        }
+
+        if (!Data.popupAlarmAvailable) {
+            builder.setAutoCancel(true)
+        }
+
+        val notification = builder.build()
+        val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        manager.notify(2, notification)
+
+        if (!Data.popupAlarmAvailable) {
+            val handler = Handler(Looper.getMainLooper())
+            handler.postDelayed({
+                manager.cancel(2)
+            }, 100)
+        }
     }
+
+
+
 }

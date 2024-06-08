@@ -7,19 +7,14 @@ import com.google.android.gms.maps.model.LatLng
 class Data {
 
     companion object {
-        var currentLocationLatng: LatLng? = null
-        var currentLocationAddress: String? = null
-
         var DestinationLocationLatng: LatLng? = null
         var DestinationLocationAddress: String? = null
 
         var FavoritesAddress : Array<String?>? = null
 
         var popupAlarmAvailable : Boolean = true
-        var bellAlarmAvailable : Boolean = false
-        var vibrationAvailable : Boolean = false
-
-        var preAlarmDistance : Int = 0
+        var bellAlarmAvailable : Boolean = true
+        var vibrationAvailable : Boolean = true
 
         var bellName : Int = 0
         var bellSound : Int = 1

@@ -127,12 +127,10 @@ class AlarmActivateActivity : FragmentActivity(), OnMapReadyCallback {
     }
 
     private fun StartAlarm() {
-        Data.bAlarmAvailable = true
         startLocationService()
     }
 
     private fun CancelAlarm() {
-        Data.bAlarmAvailable = false
         Data.ClosetestAlarmDistance = null
         stopLocationService()
     }
@@ -302,11 +300,14 @@ class AlarmActivateActivity : FragmentActivity(), OnMapReadyCallback {
 
 
     private fun startLocationService() {
+        Data.bAlarmAvailable = true
         val intent = Intent(this, LocationService::class.java)
         ContextCompat.startForegroundService(this, intent)
     }
 
     private fun stopLocationService() {
+        Data.bAlarmAvailable = false
+
         val intent = Intent(this, LocationService::class.java)
         stopService(intent)
     }
