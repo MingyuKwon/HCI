@@ -60,7 +60,7 @@ class MainActivity : AppCompatActivity() {
         AlarmStartButton.setOnClickListener {
 
             val address = DestinationShowText.text.toString()
-            if (address.isNotEmpty()) {
+            if (isAddressNotEmpty()) {
                 val intent = Intent(this, AlarmActivateActivity::class.java)
                 startActivity(intent)
             } else {
@@ -72,7 +72,7 @@ class MainActivity : AppCompatActivity() {
 
         favoriteAddButton.setOnClickListener {
             val address = DestinationShowText.text.toString()
-            if (address.isNotEmpty()) {
+            if (isAddressNotEmpty()) {
                 addFavoriteAddress(address)
             } else {
                 Toast.makeText(this, "주소를 입력하세요", Toast.LENGTH_SHORT).show()
@@ -81,7 +81,7 @@ class MainActivity : AppCompatActivity() {
 
         favoriteDeleteButton.setOnClickListener {
             val address = DestinationShowText.text.toString()
-            if (address.isNotEmpty()) {
+            if (isAddressNotEmpty()) {
                 removeFavoriteAddress(address)
             } else {
                 Toast.makeText(this, "주소를 입력하세요", Toast.LENGTH_SHORT).show()
@@ -100,6 +100,13 @@ class MainActivity : AppCompatActivity() {
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
     }
+
+    private fun isAddressNotEmpty() : Boolean
+    {
+        val address = DestinationShowText.text.toString()
+        return !(address.isEmpty() || address == "도착지를 입력하세요")
+    }
+
 
     override fun onResume() {
         super.onResume()
@@ -130,7 +137,7 @@ class MainActivity : AppCompatActivity() {
         val geocoder = Geocoder(this, Locale.getDefault())
         try {
             val addresses = geocoder.getFromLocationName(address, 1)
-            if (addresses != null && addresses.isNotEmpty()) {
+            if (addresses != null && isAddressNotEmpty()) {
                 val location = addresses[0]
                 val latLng = LatLng(location.latitude, location.longitude)
                 Data.DestinationLocationLatng = latLng
